@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伊甸專案計畫 × Eden Project</title>
+    <style>
+        /* --- 參考日本官網（fukunagaazusa.jp）美學設計 --- */
+        :root {
+            --bg-color: #fbfaf7;          /* 日系溫潤、帶有空氣感的暖米白 */
+            --text-color: #2b2b2b;        /* 優雅且不刺眼的深炭灰 */
+            --accent-color: #3b5249;      /* 內斂、具人文感的墨綠色 */
+            --border-color: #e6e4de;      /* 極細緻的淡灰線，營造留白感 */
+            --card-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121614;
+            --text-color: #e1e4e2;
+            --accent-color: #8fa89b;
+            --border-color: #2a302d;
+            --card-bg: #1a1f1d;
+        }
+
+        /* 基礎樣式重設 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.85;
+            letter-spacing: 0.08em; /* 寬鬆的日系字距 */
+        }
+
+        /* 頂部導航列 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 10%;
+            border-bottom: 1px solid var(--border-color);
+            background-color: transparent;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        /* 💡 預留 Logo 樣式：若要換成圖片 logo.png，請把下方的 logo-text 刪除，並解開 HTML 裡的 <img> 註解 */
+        .logo-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-color);
+        }
+
+        .logo-img {
+            height: 40px; /* 限制 Logo 高度維持精緻感 */
+            width: auto;
+            display: block;
+        }
+
+        .btn-theme {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+        .btn-theme:hover {
+            opacity: 1;
+        }
+
+        /* 網頁主體佈局 */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 8% 6rem 8%;
+        }
+
+        /* 小標籤（日系常見的小字提示） */
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            color: var(--accent-color);
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 3px;
+        }
+
+        /* 修正 1：有伊甸在的地方 區塊 */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            align-items: center;
+            padding: 6rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                grid-template-columns: 1.1fr 1fr; /* 左文字、右配圖 */
+            }
+        }
+
+        .hero-content h1 {
+            font-size: 2.4rem;
+            font-weight: 400;
+            margin-bottom: 1.8rem;
+            letter-spacing: 0.1em;
+            line-height: 1.4;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            text-align: justify;
+        }
+
+        .hero-image-container {
+            width: 100%;
+        }
+
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.02);
+            filter: grayscale(15%); /* 帶有一點溫暖的復古與安靜感 */
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .responsive-img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.01);
+        }
+
+        /* 修正 3：全台門市設立專屬公益小角落 區塊 */
+        .charity-section {
+            padding: 7rem 0 4rem 0;
+        }
+
+        .charity-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .charity-container {
+                grid-template-columns: 1fr 1.1fr; /* 左文字、右零錢箱 */
+            }
+        }
+
+        .charity-text h2 {
+            font-size: 1.9rem;
+            font-weight: 400;
+            margin-bottom: 1.8rem;
+            letter-spacing: 0.08em;
+        }
+
+        /* 零錢箱實體框設計 */
+        .donation-box-display {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .img-frame {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.02);
+            border-radius: 4px;
+            max-width: 85%;
+        }
+
+        .box-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 2px;
+        }
+
+        .img-caption {
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.5;
+            margin-top: 1.2rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* 頁尾 */
+        footer {
+            text-align: center;
+            padding: 5rem 0;
+            font-size: 0.75rem;
+            opacity: 0.4;
+            letter-spacing: 0.12em;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部導航列 -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- 💡 若您上傳了 logo.png 圖片，請把下面這行的註解 <!-- 與 --> 刪除，並刪除下方的 logo-text -->
+            <!-- <img src="logo.png" alt="Logo" class="logo-img"> -->
+            <div class="logo-text">Eden Project</div>
+        </div>
+        <button id="theme-btn" class="btn-theme" title="切換環境氛圍">🌙</button>
+    </nav>
+
+    <!-- 網頁主要內容 -->
+    <main>
+        
+        <!-- 修正 1：有伊甸在的地方區塊 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <span class="badge">CONCEPT</span>
+                <h1>有伊甸在的地方</h1>
+                <p class="description">
+                    溫暖的空間，承載著最純粹的善意。我們深信，只要有伊甸在的地方，就能透過貼心的陪伴與實質的在地關懷，串連起人與人之間的信任。讓美好的改變，在全台的各個角落靜靜發生。
+                </p>
+            </div>
+            <div class="hero-image-container">
+                <!-- 💡 請確保 GitHub 根目錄中有上傳 eden-main.jpg -->
+                <img src="eden-main.jpg" alt="有伊甸在的地方 概念配圖" class="responsive-img">
+            </div>
+        </section>
+
+        <!-- 修正 3：全台門市專屬公益小角落區塊 -->
+        <section class="charity-section">
+            <div class="charity-container">
+                <div class="charity-text">
+                    <span class="badge">STORE ACTION</span>
+                    <h2>全台門市設立專屬<br>公益小角落</h2>
+                    <p class="description">
+                        將愛心融入日常的步調中。我們在全台灣的門市規劃了專屬的公益展示區，拉近顧客與社會關懷的距離。讓隨手付出的微小善意，都能匯聚成改變弱勢生命前行的巨大暖流。
+                    </p>
+                </div>
+                
+                <!-- 💡 請確保 GitHub 根目錄中有上傳 donation-box.jpg -->
+                <div class="donation-box-display">
+                    <div class="img-frame">
+                        <img src="donation-box.jpg" alt="PDF 提案書愛心零錢箱" class="box-img">
+                    </div>
+                    <p class="img-caption">▲ 原 PDF 提案書：實體零錢箱置放視覺示意</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 頁尾 -->
+    <footer>
+        <p>&copy; 2026 reynalee. All Rights Reserved. Designed with Minimalist Aesthetic.</p>
+    </footer>
+
+    <!-- 內建日夜切換互動邏輯 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeBtn = document.getElementById('theme-btn');
+            const savedTheme = localStorage.getItem('site-theme') || 'light';
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+            }
+
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                if (currentTheme === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('site-theme', 'light');
+                    themeBtn.textContent = '🌙';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('site-theme', 'dark');
+                    themeBtn.textContent = '☀️';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

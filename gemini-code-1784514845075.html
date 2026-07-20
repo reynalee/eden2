@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reyna's Interactive Space</title>
+    <style>
+        /* --- CSS 變數：支援切換深淺色主題 --- */
+        :root {
+            --bg-color: #f3f4f6;
+            --container-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --border: #e5e7eb;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --container-bg: #111827;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --primary: #818cf8;
+            --primary-hover: #6366f1;
+            --border: #374151;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- 基礎樣式重設 --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- 導航列 --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            background-color: var(--container-bg);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        /* --- 按鈕通用樣式 --- */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: var(--container-bg);
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* --- 主體佈局 --- */
+        main {
+            flex: 1;
+            max-width: 1000px;
+            width: 90%;
+            margin: 3rem auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1.5fr;
+            }
+        }
+
+        /* --- 卡片區塊 --- */
+        .card {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* --- 左側：個人與動態打字機 --- */
+        .profile-zone {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), #a78bfa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+        }
+        .typewriter-container {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            min-height: 1.6rem;
+            margin: 0.5rem 0;
+        }
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            background-color: var(--primary);
+            animation: blink 0.7s infinite;
+            margin-left: 2px;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* --- 右側：互動展示儀表板 --- */
+        .interactive-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* 互動1：靈感產生器 */
+        .widget-box {
+            border: 1px dashed var(--border);
+            padding: 1.2rem;
+            border-radius: 12px;
+            background-color: rgba(99, 102, 241, 0.03);
+        }
+        .quote-display {
+            font-style: italic;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+        }
+
+        /* 互動2：虛擬動態留言板 */
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            outline: none;
+        }
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+        .comment-list {
+            margin-top: 1rem;
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .comment-item {
+            background-color: var(--bg-color);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* --- 頁尾 --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            background-color: var(--container-bg);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部導航列 -->
+    <nav>
+        <div class="logo">✨ Reyna.io</div>
+        <button id="theme-btn" class="btn">🌙 暗黑模式</button>
+    </nav>
+
+    <!-- 網頁主要互動內容 -->
+    <main>
+        <!-- 左側：個人靜態與打字機動態特效 -->
+        <section class="card profile-zone">
+            <div class="avatar">👨‍💻</div>
+            <h2>Reyna Lee</h2>
+            <div class="typewriter-container">
+                <span id="typewriter"></span><span class="cursor">&nbsp;</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">歡迎光臨！這是一個完全由前端技術驅動的單頁面互動式體驗空間。</p>
+        </section>
+
+        <!-- 右側：核心互動元件區 -->
+        <section class="card interactive-zone">
+            <h3>🎛️ 網頁互動實驗室</h3>
+            
+            <!-- 互動組件一：隨機技術語錄 -->
+            <div class="widget-box">
+                <h4>💡 今日靈感產生器</h4>
+                <p class="quote-display" id="quote-text">點擊下方按鈕，抽取一句科技冷知識或金句...</p>
+                <button id="quote-btn" class="btn btn-primary">隨機構思一個</button>
+            </div>
+
+            <!-- 互動組件二：即時動態留言牆 -->
+            <div class="widget-box">
+                <h4>💬 即時微留言牆（模擬）</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">測試前端 DOM 操作，輸入任何文字並發送看看吧！</p>
+                <div class="input-group">
+                    <input type="text" id="comment-input" placeholder="留點話給網頁主..." maxlength="30">
+                    <button id="comment-btn" class="btn btn-primary">發送</button>
+                </div>
+                <ul class="comment-list" id="comment-box">
+                    <li class="comment-item">📌 系統提示：這是一個不串接資料庫的即時渲染展示牆。</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer>
+        <p>&copy; 2026 Reyna Lee. Powered by HTML5, CSS3 & Vanilla JS.</p>
+    </footer>
+
+    <!-- --- JavaScript 核心互動邏輯 --- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. 日夜主題切換與記憶功能
+            const themeBtn = document.getElementById('theme-btn');
+            const savedTheme = localStorage.getItem('site-theme') || 'light';
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️ 白天模式';
+            }
+
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                if (currentTheme === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('site-theme', 'light');
+                    themeBtn.textContent = '🌙 暗黑模式';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('site-theme', 'dark');
+                    themeBtn.textContent = '☀️ 白天模式';
+                }
+            });
+
+            // 2. 打字機動態特效
+            const words = ["網頁前端工程師", "開源探索者", "正在建構有趣的專案...", "自動化實踐者"];
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            const typewriterEl = document.getElementById('typewriter');
+
+            function typeEffect() {
+                const currentWord = words[wordIndex];
+                if (isDeleting) {
+                    typewriterEl.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typewriterEl.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let typeSpeed = isDeleting ? 50 : 120;
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    typeSpeed = 2000; // 拼完後停頓
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length;
+                    typeSpeed = 500; // 換詞前停頓
+                }
+
+                setTimeout(typeEffect, typeSpeed);
+            }
+            typeEffect();
+
+            // 3. 靈感語錄抽取
+            const quotes = [
+                "「世界上只有 10 種人：懂二進位的，和不懂的。」",
+                "「密碼就像牙刷，選個好的、不要跟別人共用、每幾個月換一次。」",
+                "「寫程式的黃金定律：如果它能動，就千萬不要去碰它。」",
+                "「Talk is cheap. Show me the code. — Linus Torvalds」",
+                "「在你的程式碼能正常運作前，它都是有 Bug 的。」"
+            ];
+            const quoteBtn = document.getElementById('quote-btn');
+            const quoteText = document.getElementById('quote-text');
+
+            quoteBtn.addEventListener('click', () => {
+                const randomIndex = Math.floor(Math.random() * quotes.length);
+                quoteText.style.opacity = 0;
+                setTimeout(() => {
+                    quoteText.textContent = quotes[randomIndex];
+                    quoteText.style.opacity = 1;
+                }, 150);
+            });
+
+            // 4. 前端模擬留言板
+            const commentInput = document.getElementById('comment-input');
+            const commentBtn = document.getElementById('comment-btn');
+            const commentBox = document.getElementById('comment-box');
+
+            function addComment() {
+                const text = commentInput.value.trim();
+                if (text === '') return;
+
+                const li = document.createElement('li');
+                li.className = 'comment-item';
+                const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                li.textContent = `💬 [${time}] 訪客說：${text}`;
+                
+                commentBox.insertBefore(li, commentBox.firstChild);
+                commentInput.value = '';
+            }
+
+            commentBtn.addEventListener('click', addComment);
+            commentInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addComment();
+            });
+        });
+    </script>
+</body>
+</html>
